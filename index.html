@@ -3,35 +3,38 @@
 <head>
   <meta charset="utf-8">
   <title>Hello World</title>
-  <style>* {padding: 0; margin: 0}</style>
 </head>
   <script src="js/pixi.js"></script>
 <body>
   <script type="text/javascript">
-    var type = "WebGL"
-    if(!PIXI.utils.isWebGLSupported()){
-      type = "canvas"
-    }
 
-    PIXI.utils.sayHello(type);
+	window.onload = function() {
 
-    // Create the renderer
-    var renderer = PIXI.autoDetectRenderer(
-			256, 256,
-			{antialias: false, transparent: false, resolution: 1});
-	renderer.view.style.position = "absolute";
-	renderer.view.style.display = "block";
-	renderer.autoResize = true;
-	renderer.resize(window.innerWidth, window.innerHeight);
+		// create a PIXI Stage and Renderer
+		// - add them to the DOM
+		var stage = new PIXI.Container();
+		var renderer = new PIXI.autoDetectRenderer(256,256);
+		document.body.appendChild(renderer.view);
 
-    // Add the canvas to the HTML document
-    document.body.appendChild(renderer.view);
+		// load an image and run the setup function when its done
+		PIXI.loader
+			.add("images/cat.png")
+			.load(setup);
 
-    // Create the container object called the stage
-    var stage = new PIXI.Container();
+		// this setup function will run when the image has loader
+		function setup() {
 
-    // Tell the renderer to render the stage
-    renderer.render(stage);
+			// create the cat sprite
+			var cat = new PIXI.Sprite(PIXI.loader.resources["images/cat.png"].texture);
+
+			// Add the cat to the stage
+			stage.addChild(cat);
+
+			// Render the stage
+			renderer.render(stage);
+		}
+
+	};
 
   </script>
 </body>
