@@ -18,11 +18,14 @@
 
 		// load an image and run the setup function when its done
 		PIXI.loader
-			.add("images/cat.png")
+			.add("images/tileset.png")
 			.load(setup);
 
 		// this setup function will run when the image has loader
 		function setup() {
+
+			// create the tileset sprite form the texture
+			var rocket = new PIXI.Sprite(PIXI.loader.resources["images/cat.png"].texture);
 
 			// create the cat sprite
 			var cat = new PIXI.Sprite(PIXI.loader.resources["images/cat.png"].texture);
