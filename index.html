@@ -10,40 +10,33 @@
 
 	window.onload = function() {
 
-		// create a PIXI Stage and Renderer
-		// - add them to the DOM
-		var stage = new PIXI.Container();
-		var renderer = new PIXI.autoDetectRenderer(256,256);
-		document.body.appendChild(renderer.view);
+		//Create a Pixi Application
+		var app = new PIXI.Application({ 
+			width: 256, 
+			height: 256,                       
+			antialias: true, 
+			transparent: false, 
+			resolution: 1
+		  }
+		);
 
-		// load an image and run the setup function when its done
+		// Add the canvas that Pixi automatically created for you to the HTML document
+		document.body.appendChild(app.view);
+
+		// Load an image and run the setup function when its done
 		PIXI.loader
 			.add("images/cat.png")
 			.load(setup);
 
-		// this setup function will run when the image has loader
+		// This setup function will load when the image has loaded
 		function setup() {
-
+			
 			// create the cat sprite
 			var cat = new PIXI.Sprite(PIXI.loader.resources["images/cat.png"].texture);
 
-			cat.x = 96;
-			cat.y = 96;
-
-			cat.width = 80;
-			cat.height = 120;
-
-			cat.scale.x = 2;
-			cat.scale.y = 2;
-
-			cat.rotation = 0.5
-
-			// Add the cat to the stage
-			stage.addChild(cat);
-
-			// Render the stage
-			renderer.render(stage);
-		}
+			// add the cat to the stage
+			app.stage.addChild(cat);
+		};
 
 	};
 
