@@ -1,19 +1,25 @@
 <!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Hello World</title>
-</head>
-  <script src="js/pixi.js"></script>
+<meta charset="utf-8">
+<title>Make a sprite from a texture atlas</title>
 <body>
-  <script type="text/javascript">
+<script src="js/pixi.js"></script>
+<script type="text/javascript">
 
 	window.onload = function() {
 
+		//Aliases
+		var Application = PIXI.Application,
+			Container = PIXI.Container,
+			loader = PIXI.loader,
+			resources = PIXI.loader.resources,
+			TextureCache = PIXI.utils.TextureCache,
+			Sprite = PIXI.Sprite,
+			Rectangle = PIXI.Rectangle;
+
 		//Create a Pixi Application
-		var app = new PIXI.Application({ 
-			width: 256, 
-			height: 256,                       
+		var app = new Application({ 
+			width: 512, 
+			height: 512,                       
 			antialias: true, 
 			transparent: false, 
 			resolution: 1
@@ -23,44 +29,90 @@
 		// Add the canvas that Pixi automatically created for you to the HTML document
 		document.body.appendChild(app.view);
 
-		// Load an image and run the setup function when its done
-		PIXI.loader
-			.add("images/tileset.png")
+		// Load a JSON file and run the setup when its done
+		loader
+			.add("images/treasureHunter.json")
 			.load(setup);
 
-		// This setup function will load when the image has loaded
+		// variables used in more than one function
+		var dungeon, explorer, treasure, id;
+
 		function setup() {
-			
-			// create the tileset sprite from the texture
-			var texture = PIXI.TextureCache["images/tileset.png"];
+		
+			// three ways to make sprites from texture atlas frames
+		
+			// 1. Access the TextureCache directly
+			let dungeonTexture = TextureCache["dungeon.png"];
+			dungeon = new Sprite(dungeonTexture);
+			app.stage.addChild(dungeon);
+			//var dungeonTexture = TextureCache["dungeon.png"];
+			//dungeon = New Sprite(dungeonTexture);
+			//app.stage.addChild(dungeon);			
 
-			// Create a rectangle object that defines the postion and 
-			// size of th sub-image you want to extract from the texture
-			// (Rectangle is an alias for PIXI.Rectangle
-			var rectangle = new PIXI.Rectangle(192,128,64,64);
+			// 2. Access the texture using the loaders resources
+			explorer = new Sprite(
+				resources["images/treasureHunter.json"].textures["explorer.png"]
+			);
+			explorer.x = 68
 
-			// Tell the texture to use that rectangular section
-			texture.frame = rectangle;
+			// Center the exporer vertically
+			explorer.y = app.stage.height / 2 - explorer.height / 2;
+			app.stage.addChild(explorer);
 
-			// Create the sprite from the texture
-			var rocket = new PIXI.Sprite(texture);
+			// 3. Create an optional alias called id for all texture alias frame id textures
+			id = PIXI.loader.resources["images/treasureHunter.json"].textures;
 
-			// Position the rocket sprite on the canvas
-			rocket.x = 32;
-			rocket.y = 32;
+			// Make the treasure box using the alias
+			treasure = new Sprite(id["treasure.png"]);
+			app.stage.addChild(treasure);
 
-			// Add the rocket to the stage
-			app.stage.addChild(rocket);
+			// Position the treasure next to the right edge of the canvas
+			treasure.x = app.stage.width - treasure.width - 48;
+			treasure.y = app.stage.height / 2 - treasure.height / 2;
 
-			// Render the stage
-			app.renderer.render(app.stage);
+			// Make the exit door
+			door = new Sprite(id["door.png"]);
+			door.position.set(32, 0);
+			app.stage.addChild(door);
+
+			// Make the blobs
+			var numberofBlobs = 6,
+				spacing = 48,
+				xOffset = 150;
+
+			//Make as many blobs as there are `numberOfBlobs`
+			for (let i = 0; i < numberOfBlobs; i++) {
+
+				//Make a blob
+				let blob = new Sprite(id["blob.png"]);
+
+				//Space each blob horizontally according to the `spacing` value.
+				//`xOffset` determines the point from the left of the screen
+				//at which the first blob should be added.
+				let x = spacing * i + xOffset;
+
+				//Give the blob a random y position
+				//(`randomInt` is a custom function - see below)
+				let y = randomInt(0, app.stage.height - blob.height);
+
+				//Set the blob's position
+				blob.x = x;
+				blob.y = y;
+
+				//Add the blob sprite to the stage
+				app.stage.addChild(blob);
+			}
+
+		};
+
+		function randomInt(min, max) {
+			return Math.floor(Math.random() * (min - max + 1)) + min;
 		};
 
 	};
 
-  </script>
+</script>
 </body>
-</html>
 ~                                                                                                                                     
 ~                                                                                                                                     
 ~                                                                                                                                     
