@@ -34,6 +34,21 @@
 			// create the cat sprite
 			var cat = new PIXI.Sprite(PIXI.loader.resources["images/cat.png"].texture);
 
+                        // center the cat
+                        cat.x = 96;
+                        cat.y = 96;
+
+                        // change the cats scale
+                        cat.scale.x = 2;
+                        cat.scale.y = 2;
+
+                        // center the cat sprites anchor point
+                        cat.anchor.x = 0.5;
+                        cat.anchor.y = 0.5;
+
+                        // rotate the cat
+                        cat.rotation = 0.5;
+
 			// add the cat to the stage
 			app.stage.addChild(cat);
 		};
