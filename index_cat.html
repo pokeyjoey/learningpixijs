@@ -20,6 +20,8 @@
 		  }
 		);
 
+		var cat, state;
+
 		// Add the canvas that Pixi automatically created for you to the HTML document
 		document.body.appendChild(app.view);
 
@@ -32,10 +34,30 @@
 		function setup() {
 			
 			// create the cat sprite
-			var cat = new PIXI.Sprite(PIXI.loader.resources["images/cat.png"].texture);
-
-			// add the cat to the stage
+			cat = new PIXI.Sprite(PIXI.loader.resources["images/cat.png"].texture);
+			cat.y = 96;
+			cat.vx = 0;
+			cat.vy = 0;
 			app.stage.addChild(cat);
+
+			// set the game state
+			state = play;
+
+			// start the game loop
+			app.ticker.add(delta => gameloop(delta));
+		};
+
+		function gameloop(delta){
+
+			// update the current game state
+			state(delta);
+		};
+
+		function play(delta) {
+
+				// Move cat pixel to the right each frame
+				cat.vx = 1;
+				cat.x += cat.vx;
 		};
 
 	};
